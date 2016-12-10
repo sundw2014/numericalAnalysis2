@@ -13,7 +13,8 @@ hp_Number Romberg_method(int n, hp_Number a, hp_Number b);
 hp_Number ln_Taylor(double x)
 {
     hp_Number e(E);
-    hp_Number t = hp_Number(std::to_string(x))/e.pow(5);
+    int frc = std::ceil(std::log(x));
+    hp_Number t = hp_Number(std::to_string(x))/e.pow(frc);
     t = t - hp_Number("1");
 
     hp_Number result("0");
@@ -33,25 +34,22 @@ hp_Number ln_Taylor(double x)
             result = result - term;
         }
     }
-    return result + hp_Number("5");
+    return result + hp_Number(std::to_string(frc));
 }
-hp_Number ln_integration(double _x)
+hp_Number ln_integration(double x)
 {
-    hp_Number h("0.01");
-    hp_Number b = hp_Number(std::to_string(_x));
-    hp_Number a = hp_Number("1");
-    int n = std::ceil(((b-a)/h).getDouble());
+    hp_Number e(E);
+    int frc = std::ceil(std::log(x));
+    hp_Number t = hp_Number(std::to_string(x))/e.pow(frc);
+
+    hp_Number a = t;
+    hp_Number b = hp_Number("1");
+    int n = 10000;
     hp_Number result;
 
-    // 龙贝格公式
-    result = Romberg_method(2*n,a,b) * hp_Number(std::to_string((double)((128)/(128-1))))\
-        + Romberg_method(n,a,b) * hp_Number(std::to_string((double)((-1)/(128-1))));
-    // result = Simpson_method(2*n,a,b)*hp_Number(std::to_string((double)((16)/(15))))-\
-    //     Simpson_method(n,a,b)*hp_Number(std::to_string((double)((1)/(15))));
-
+    result = Romberg_method(n,a,b);
+    result = hp_Number(std::to_string(frc)) - result;
     return result;
-    // std::cout<<"n="<<n<<std::endl;
-    // return Simpson_method(n,a,b);
 }
 // hp_Number ln_fake(double x)
 // {
@@ -66,7 +64,7 @@ hp_Number Simpson_method(int n, hp_Number a, hp_Number b)
     // 常数1
     hp_Number One = hp_Number("1");
     hp_Number term1("0"), term2("0");
-    hp_Number sumX("1");
+    hp_Number sumX = a;
 
     for(int k=1;k<n;k++)
     {
@@ -74,7 +72,7 @@ hp_Number Simpson_method(int n, hp_Number a, hp_Number b)
         term1 = term1 + One/sumX;
     }
 
-    sumX = One;
+    sumX = a;
     sumX = sumX + hp_Number(std::to_string(0.5))*h;
     for(int k=0;k<n;k++)
     {
@@ -90,6 +88,6 @@ hp_Number Simpson_method(int n, hp_Number a, hp_Number b)
 hp_Number Romberg_method(int n, hp_Number a, hp_Number b)
 {
     return Simpson_method(4*n,a,b)*hp_Number(std::to_string((double)((64*16)/(63*15))))\
-    + Simpson_method(2*n,a,b)*hp_Number(std::to_string((double)((-64-16)/(63*15))))\
-    + Simpson_method(n,a,b)*hp_Number(std::to_string((double)((1)/(63*15))));
+        + Simpson_method(2*n,a,b)*hp_Number(std::to_string((double)((-64-16)/(63*15))))\
+        + Simpson_method(n,a,b)*hp_Number(std::to_string((double)((1)/(63*15))));
 }
