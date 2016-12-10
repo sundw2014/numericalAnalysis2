@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-// #include "lnx.h"
+#include "lnx.h"
 #include "high_precision.h"
 
 int main (void)
@@ -87,6 +87,20 @@ int main (void)
 
     hp_Number t("1.1");
     c = t.pow(100);
+    sign="";
+    if(c.sign==-1){
+        sign = "-";
+    }
+    std::cout<<sign<<"0."<<c.significand<<"*10^"<<c.exponent<<std::endl;
+
+    c = ln_Taylor(10.5);
+    sign="";
+    if(c.sign==-1){
+        sign = "-";
+    }
+    std::cout<<sign<<"0."<<c.significand<<"*10^"<<c.exponent<<std::endl;
+
+    c = ln_integration(10.5);
     sign="";
     if(c.sign==-1){
         sign = "-";

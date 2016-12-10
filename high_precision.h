@@ -24,6 +24,7 @@ public:
     bool isZero();
     void set_prec(unsigned int _precision);
     // const std::string& getValue() const;
+    double getDouble() const;
     // ~hp_Number();
     hp_Number operator +(const hp_Number& b);
     hp_Number operator -(const hp_Number& b);

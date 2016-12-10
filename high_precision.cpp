@@ -120,6 +120,7 @@ hp_Number hp_Number::operator +(const hp_Number& b)
         extraSign = -1;
         result_significand = result_significand.substr(1);
     }
+    result.exponent += result_significand.length() - tmpLength;
     result.sign = sign*extraSign;
     result.significand = result_significand;
     result.format();
@@ -197,6 +198,9 @@ hp_Number hp_Number::operator /(const hp_Number& _b)
         else if(remainder.length()==b_significand.length()+1){
             int r=(remainder[0]-asciiOffset)*10+remainder[1]-asciiOffset;
             quotient = r/(b_significand[0]-asciiOffset);
+            if(quotient>9){
+                quotient = 9;
+            }
         }
         // 相同，则估计为高位相除
         else{
@@ -381,4 +385,11 @@ void stringNumberBasicOperation_mul(std::string a_significand, char b, std::stri
         term_significand = std::string(1,(char)(carry+asciiOffset)) + term_significand;
         carry = 0;
     }
+}
+
+double hp_Number::getDouble() const
+{
+    double _significand = std::stod(std::string("0.") + significand);
+    _significand *= std::pow(10,exponent);
+    return _significand;
 }
