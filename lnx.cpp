@@ -51,10 +51,24 @@ hp_Number ln_integration(double x)
     result = hp_Number(std::to_string(frc)) - result;
     return result;
 }
-// hp_Number ln_fake(double x)
-// {
-//
-// }
+
+hp_Number ln_inverseHyperbolic(double x)
+{
+    hp_Number One = hp_Number("1");
+    hp_Number _x = hp_Number(std::to_string(x));
+    hp_Number t = (_x-One)/(_x+One);
+    hp_Number t_pow2 = t.pow(2);
+    hp_Number result;
+    int n = 3000;
+
+    hp_Number tmpPower = t;
+    for(int i=0;i<n;i++){
+        result = result + tmpPower/hp_Number(std::to_string(2*i+1));
+        tmpPower = tmpPower * t_pow2;
+    }
+    result = result * hp_Number("2");
+    return result;
+}
 
 // f(x)=1/x
 hp_Number Simpson_method(int n, hp_Number a, hp_Number b)

@@ -5,6 +5,6 @@
 
 hp_Number ln_Taylor(double x);
 hp_Number ln_integration(double x);
-hp_Number ln_fake(double x);
+hp_Number ln_inverseHyperbolic(double x);
 
 #endif
