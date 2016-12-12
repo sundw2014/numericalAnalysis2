@@ -11,8 +11,10 @@ int main (void)
     char key;
     double x;
 
-    cout << "intput x:";
+    cout << "intput x: ";
     cin >> x;
+    // cout<<"intput is " << to_string(x) << ", right?" << std::endl;
+    // return (1);
     cout<<"select method:\r\n0. Taylor series\r\n1. integration\r\n2. inverse hyperbolic\r\n";
     cin >> key;
     switch(key)
@@ -43,6 +45,6 @@ int main (void)
     if(result.sign==-1){
         sign = "-";
     }
-    cout<<sign<<"0."<<result.significand.substr(0,20)<<"*10^"<<result.exponent<<std::endl;
+    cout<<sign<<"0."<<result.significand.substr(0,21)<<"*10^"<<result.exponent<<std::endl;
     return 0;
 }

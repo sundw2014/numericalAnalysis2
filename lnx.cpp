@@ -5,7 +5,7 @@
 #include <thread>
 #include <iostream>
 
-#define Taylor_series_length 1000
+#define Taylor_series_length 100
 
 hp_Number Simpson_method(int n, hp_Number a, hp_Number b);
 hp_Number Romberg_method(int n, hp_Number a, hp_Number b);
@@ -44,7 +44,7 @@ hp_Number ln_integration(double x)
 
     hp_Number a = t;
     hp_Number b = hp_Number("1");
-    int n = 10000;
+    int n = 300;
     hp_Number result;
 
     result = Romberg_method(n,a,b);
@@ -54,12 +54,16 @@ hp_Number ln_integration(double x)
 
 hp_Number ln_inverseHyperbolic(double x)
 {
+    hp_Number e(E);
     hp_Number One = hp_Number("1");
     hp_Number _x = hp_Number(std::to_string(x));
+    int frc = std::ceil(std::log(x));
+    _x = _x/e.pow(frc);
+
     hp_Number t = (_x-One)/(_x+One);
     hp_Number t_pow2 = t.pow(2);
     hp_Number result;
-    int n = 3000;
+    int n = 30;
 
     hp_Number tmpPower = t;
     for(int i=0;i<n;i++){
@@ -67,7 +71,7 @@ hp_Number ln_inverseHyperbolic(double x)
         tmpPower = tmpPower * t_pow2;
     }
     result = result * hp_Number("2");
-    return result;
+    return result + hp_Number(std::to_string(frc));
 }
 
 // f(x)=1/x
@@ -101,7 +105,7 @@ hp_Number Simpson_method(int n, hp_Number a, hp_Number b)
 
 hp_Number Romberg_method(int n, hp_Number a, hp_Number b)
 {
-    return Simpson_method(4*n,a,b)*hp_Number(std::to_string((double)((64*16)/(63*15))))\
-        + Simpson_method(2*n,a,b)*hp_Number(std::to_string((double)((-64-16)/(63*15))))\
-        + Simpson_method(n,a,b)*hp_Number(std::to_string((double)((1)/(63*15))));
+    return Simpson_method(4*n,a,b)*hp_Number(std::to_string(64*16))/hp_Number(std::to_string(63*15))\
+        + Simpson_method(2*n,a,b)*hp_Number(std::to_string(-64-16))/hp_Number(std::to_string(63*15))\
+        + Simpson_method(n,a,b)*hp_Number(std::to_string(1))/hp_Number(std::to_string(63*15));
 }

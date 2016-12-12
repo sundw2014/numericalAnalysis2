@@ -1,0 +1,71 @@
+\documentclass[UTF8,twocolum,titlepage]{ctexart}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{geometry}
+\usepackage{amsmath,bm}
+\usepackage{url}
+% \setCJKfamilyfont{deffont}{simkai.ttf}
+\geometry{left=3cm,right=3cm,top=2.5cm,bottom=2.5cm}
+\title{数值分析 自然对数的数值计算}
+\author{孙大伟 2014010782}
+\date{}
+
+\begin{document}
+\maketitle
+\boldmath
+\section*{需求分析}
+\paragraph{}
+使用数值方法计算$ln\left(x\right)$，要求精度高于$10^{-20}$。
+\section*{方案设计}
+\paragraph{}
+输入$x$，然后选取一种计算方法进行计算。计算方法包括泰勒级数法，数值积分法，反双曲正切法。由于编程语言内建的浮点数类型不足以支持作业要求的精度，所以需要实现任意精度的四则运算。
+\paragraph{}
+因为输入的$x$范围较大，不便于控制误差，所以在每种方法计算之前都作变换$$t=\frac{x}{e^{ceil\left(ln\left(x\right)\right)}}$$ $$ln\left(x\right)=ln\left(t\right)+e*ceil\left(ln\left(x\right)\right)$$其中$ceil\left(f\right)$表示对$f$上取整，此变换将操作数变换到区间$\left(\frac{1}{e},1 \right]$上。以下对每种方法的介绍都是假设操作数在区间$\left(\frac{1}{e},1 \right]$上。
+\subsection*{泰勒级数法}
+对$ln\left(t\right)$做泰勒展开，因为$t\in\left(\frac{1}{e},1 \right]$，所以泰勒级数收敛到$ln\left(t\right)$。
+$$ln\left(t\right)=\sum\limits_{n=1}^{\infty}\frac{\left(-1\right)^{n-1}*\left(t-1\right)^{n}}{n}$$
+\subsection*{数值积分法}
+因为$$ln\left(t\right)=\int_1^t \frac{1}{x}\,dx$$所以可以使用数值积分方法得到$ln\left(t\right)$的值。实验中使用了龙贝格算法进行计算。
+\subsection*{反双曲正切法}
+通过查阅资料，发现了比泰勒级数更有效\cite{Logarithm_Wikipedia}的级数方法，基于反双曲正切的幂级数。
+\begin{eqnarray*}
+ln\left(t\right) &=&2*artanh\left(\frac{t-1}{t+1}\right)\\&=&2*\sum_{n=0}^{\infty}\frac{1}{2n+1}\left(\frac{t-1}{t+1}\right)^{2n+1}
+\end{eqnarray*}
+
+\section*{流程图}
+
+\section*{误差估计}
+\subsection*{泰勒级数法}
+\subsubsection*{方法误差}
+假设使用$N$项泰勒级数进行近似，则余项为级数$$R_N=\sum\limits_{n=N+1}^{\infty}\frac{\left(-1\right)^{n-1}*\left(t-1\right)^{n}}{n}$$
+当$N$足够大时，此级数是绝对值单调下降的交错级数，即莱布尼茨级数。所以有结论$$\left|R_N\right| \le  \frac{\left(-1\right)^{N-1}*\left(t-1\right)^{N}}{N}$$对于输入$t\in\left(\frac{1}{e},1 \right]$有$$\left|R_N\right| \le \frac{\left(1-\frac{1}{e}\right)^N}{N}$$实验中取$N=100$所以有$$\left|R_N\right| \le 1.2*10^{-22}$$
+\subsubsection*{存储误差}
+
+\subsection*{数值积分法}
+\subsubsection*{方法误差}
+实验中使用的是龙贝格方法$R_N$，此方法的收敛速度为8阶。所以
+\begin{eqnarray*}
+R\left[f\right] &\le& h^8\\&=&\left(\frac{1-t}{N}\right)^8\\ &\le& \left(\frac{1-\frac{1}{e}}{N}\right)^8
+\end{eqnarray*}
+实验中取$N=300$，所以$$R \le 3.9*10^{-22}$$
+\subsubsection*{存储误差}
+
+\subsection*{反双曲正切法}
+\subsubsection*{方法误差}
+假设使用$N$项级数近似，则余项为$$\left|R_N\right| =  2*\sum_{n=N}^{\infty}\frac{1}{2n+1}\left(\frac{1-t}{t+1}\right)^{2n+1}$$所以
+\begin{eqnarray*}
+\left|R_N\right| &\le& 2*\sum_{n=N}^{\infty}\frac{1}{2N+1}\left(\frac{1-t}{t+1}\right)^{2n+1} \\ &=& \frac{2}{2N+1}\frac{\left(\frac{1-t}{t+1}\right)^{2N+1}}{1-\left(\frac{1-t}{t+1}\right)^2}\\&\le& \frac{2}{2N+1}\cdot\frac{\left(\frac{1-\frac{1}{e}}{\frac{1}{e}+1}\right)^{2N+1}}{1-\left(\frac{1-\frac{1}{e}}{\frac{1}{e}+1}\right)^2}\\&=&\frac{2}{2N+1}\cdot\frac{\left(0.462\right)^{2N+1}}{0.786}
+\end{eqnarray*}
+实验中取$N=30$，所以$$\left|R_N\right| \le 1.5*10^{-22}$$
+\subsubsection*{存储误差}
+
+\section*{结果分析}
+
+\newpage
+%如果文档类是article之类的, 用\renewcommand\refname{参考文献}
+\renewcommand\refname{参考文献}
+\bibliographystyle{plain}
+\bibliography{ref.bib}
+\end{document}
