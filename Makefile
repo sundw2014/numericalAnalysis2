@@ -13,7 +13,7 @@ CFLAGS = -std=c++11 -g
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += -I$(INC_DIR)
 
-LDFLAGS = -lgmpxx -lgmp
+# LDFLAGS = -lgmpxx -lgmp
 
 # SRC files
 CSRC = $(wildcard $(SRC_DIR)/*.c)
