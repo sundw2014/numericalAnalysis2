@@ -37,14 +37,15 @@ $(CPPOBJ) : %.o : %.cpp $(INC)
 
 .PHONY:clean
 clean:
-	@rm $(COBJ) $(CPPOBJ) $(TARGET)
+	@rm $(COBJ) $(CPPOBJ) $(TARGET)	test/test test/test.o
 	make -C doc clean
 
 .PHONY:test
 test:
+	make
 	rm main.o
-	$(CXX) -c test/test.cpp -o /test/test.o $(CFLAGS)
-	$(CXX) -o test/test /test/test.o *.o $(LDFLAGS)
+	$(CXX) -c test/test.cpp -o test/test.o $(CFLAGS)
+	$(CXX) -o test/test test/test.o *.o $(LDFLAGS)
 	test/test
 
 .PHONY:doc
