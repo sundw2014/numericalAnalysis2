@@ -3,3 +3,5 @@ main
 *.aux
 *.log
 *.dvi
+*.bbl
+*.blg

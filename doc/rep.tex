@@ -27,6 +27,7 @@
 对$ln\left(t\right)$做泰勒展开，因为$t\in\left(\frac{1}{e},1 \right]$，所以泰勒级数收敛到$ln\left(t\right)$。
 $$ln\left(t\right)=\sum\limits_{n=1}^{\infty}\frac{\left(-1\right)^{n-1}*\left(t-1\right)^{n}}{n}$$
 \subsection*{数值积分法}
+\paragraph{}
 因为$$ln\left(t\right)=\int_1^t \frac{1}{x}\,dx$$所以可以使用数值积分方法得到$ln\left(t\right)$的值。实验中使用了龙贝格算法进行计算，即
 \begin{eqnarray*}
 R_n&=&\frac{64}{63}C_{2n}-\frac{1}{63}C_{n}\\
@@ -34,8 +35,18 @@ R_n&=&\frac{64}{63}C_{2n}-\frac{1}{63}C_{n}\\
 \end{eqnarray*}
 其中
 $$S_n=\frac{h}{6}\left[f(a)+f(b)+2\sum_{k=1}^{n-1}f(x_{k})+4\sum_{k=0}^{n-1}f(x_{k}+\frac{h}{2})\right]$$
+\paragraph{积分方法的确定}
+复化积分法外推加速公式\\
+$$T_m^{(k)}=\frac{4^m}{4^m-1}T_{m-1}^{k+1}-\frac{1}{4^m-1}T_{m-1}^{k}$$
+加速一次收敛速度提升2阶，需要计算的项数变为3倍。$T_m^{(k)}$的收敛速度为$\left(\frac{L}{2^k}\right)^{2m+2}$，需要计算$N=3^m\cdot2^k$项。固定收敛速度为$\varepsilon=10^{-20}$，则有$$\left(\frac{L}{2^k}\right)^{2m+2}=\varepsilon$$ $$N=3^m\cdot\frac{L}{\varepsilon^{\frac{1}{2m+2}}}$$所以得到加速次数与计算项数的关系如图\ref{fig:integration_m}，从图中可以看出，选择$m=3$比较合理，即龙贝格公式。
+\begin{figure}[H]
+\centering
+\includegraphics[width = .9\textwidth]{image/integration_m.eps}
+\caption{加速次数与计算项数的关系}
+\label{fig:integration_m}
+\end{figure}
 \subsection*{反双曲正切法}
-通过查阅资料，发现了比泰勒级数更有效\cite{Logarithm_Wikipedia}的级数方法，基于反双曲正切的幂级数。
+通过查阅资料，发现了比泰勒级数更有效\cite{Logarithm_Wikipedia}的级数方法：基于反双曲正切的幂级数。
 \begin{eqnarray*}
 ln\left(t\right) &=&2*artanh\left(\frac{t-1}{t+1}\right)\\&=&2*\sum_{n=0}^{\infty}\frac{1}{2n+1}\left(\frac{t-1}{t+1}\right)^{2n+1}
 \end{eqnarray*}
@@ -85,15 +96,15 @@ R\left[f\right] &\le& h^8\\&=&\left(\frac{1-t}{N}\right)^8\\ &\le& \left(\frac{1
 \end{eqnarray*}
 所以得到$$e_k \le \frac{1-\varepsilon^k}{1-\varepsilon}E \le \frac{E}{1-\varepsilon}$$所以存储误差$$R_2 \le \frac{E}{1-\varepsilon}*N=6.4*10^{-24}$$
 \section*{结果分析}
-\subsection*{性能及收敛速度}
+\subsection*{收敛速度}
 \paragraph{两种幂级数方法进行比较}
 在同等精度下，反双曲正切级数比泰勒级数用的项更少。假设后者使用$N$项，则前者使用小于$\frac{N}{2}$项即可，收敛更快。
 \paragraph{幂级数法与龙贝格积分法进行比较}
 龙贝格方法需要更多的计算，才能达到相同精度
-\paragraph{积分方法的确定}
-复化积分法外推加速公式\\
-$$T_m^{(k)}=\frac{4^m}{4^m-1}T_{m-1}^{k+1}-\frac{1}{4^m-1}T_{m-1}^{k}$$
-加速一次收敛速度提升2阶，需要计算的项数变为3倍。$T_m^{(k)}$的收敛速度为$\left(\frac{L}{2^k}\right)^{2m+2}$，需要计算$N=3^m\cdot2^k$项。固定收敛速度为$\varepsilon=10^{-20}$，则有$$\left(\frac{L}{2^k}\right)^{2m+2}=\varepsilon$$ $$N=3^m\cdot\frac{L}{\varepsilon^{\frac{1}{2m+2}}}$$所以得到加速次数与计算项数的关系如图\ref{fig:integration_m}，从图中可以看出，选择$m=3$比较合理，即龙贝格公式。
+\subsection*{计算时间}
+进过测试，泰勒级数和反双曲正切级数法的用时都小于$0.1s$，而积分法则需要$3s$左右的时间
+\subsection*{数据测试}
+使用$1,2,3,\cdot\cdot\cdot,100$进行了测试，三种方法计算结果前$21$位完全一致
 \newpage
 %如果文档类是article之类的, 用\renewcommand\refname{参考文献}
 \renewcommand\refname{参考文献}
